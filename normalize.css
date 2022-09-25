@@ -1188,11 +1188,20 @@ div.errorMessage {
 	margin: 0px 5px;
 }
 
+.linksGroup .gpsButtons:disabled {
+	background-color: #ffffff26;
+	cursor: not-allowed;
+}
+
 .linksGroup .gpsButtons span {
 	cursor: pointer;
 	display: inline-block;
 	position: relative;
 	transition: 0.5s;
+}
+
+.linksGroup .gpsButtons:disabled span {
+	cursor: not-allowed;
 }
 
 .linksGroup .gpsButtons span:after {

@@ -84,6 +84,18 @@
 				<span>About & FAQ </span>
 			</a>
 		</div>
+		<div class="linksGroup" id="unitsLinksGroup">
+			<button class="gpsButtons" id="unitsFButton" onClick="setUnit('F', true);" role="button" name="setFahrenheit" disabled>
+				<span>&#176;F </span>
+			</button>
+			<button class="gpsButtons" id="unitsCButton" onClick="setUnit('C', true);" role="button" name="setCelsius">
+				<span>&#176;C </span>
+			</button>
+			<button class="gpsButtons" id="unitsKButton" onClick="setUnit('K', true);" role="button" name="setKelvin">
+				<span>&#176;K </span>
+			</button>
+			<div class="clearfix"></div>
+		</div>
 		<div class="clearfix"></div>
 		<div id="currentText" class="currentText">Current Conditions - Fetching Data...</div>
 		<div id="errorMessage" class="errorMessage" style="display: none;">There was an error fetching the data</div>
@@ -415,8 +427,8 @@
 			</div>
 			<div class="credits">
 				<p>
-					Version 3.7.2:
-					<a href="https://github.com/ALEEF02/lfweather/releases/tag/v3.7.2" id="changelogLink" onclick="trackOutboundLink('https://github.com/ALEEF02/lfweather/releases/tag/v3.7.2'); return false;">
+					Version 3.8.0:
+					<a href="https://github.com/ALEEF02/lfweather/releases" id="changelogLink" onclick="trackOutboundLink('https://github.com/ALEEF02/lfweather/releases'); return false;">
 						Changelog
 					</a>
 				</p>
