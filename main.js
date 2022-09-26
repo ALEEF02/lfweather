@@ -638,7 +638,7 @@ function checkPosition(position) {
 	url = ('https://lfweather.herokuapp.com/forecast/' + lat + ',' + lon);
 	console.log('Found user location, setting new latitude and longitude: ' + lat + ', ' + lon);
 	console.log('New URL: ' + url);
-	//document.getElementById('map-embed-iframe').src = 'https://maps.darksky.net/@radar,' + lat + ',' + lon + ',10?domain=file%3A%2F%2F%2FC%3A%2FUsers%2Ffordf%2FDesktop%2Flfweather%2Findex.html&amp;auth=1547925784_1597c1ace68e31ce860f03d19e60ca58&amp;marker=' + lat + '%2C' + lon + '&amp;embed=true&amp;timeControl=false&amp;fieldControl=false&amp;defaultField=radar';
+	document.getElementById('map-embed-iframe').src = 'https://maps.darksky.net/@radar,' + lat + ',' + lon + ',10?domain=file%3A%2F%2F%2FC%3A%2FUsers%2Ffordf%2FDesktop%2Flfweather%2Findex.html&auth=1547925784_1597c1ace68e31ce860f03d19e60ca58&marker=' + lat + ',' + lon + '&embed=true&timeControl=false&fieldControl=false&defaultField=radar';
 	//console.log('New radar link: ' + document.getElementById('map-embed-iframe').src);
 	if (!(position.coords.latitude > '33.606301' && position.coords.latitude < '33.706016' && position.coords.longitude > '-117.718207' && position.coords.longitude < '-117.619621')) {
 		console.log('User outside Lake Forest, beginning reverse geocode');
