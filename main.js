@@ -124,6 +124,7 @@ function addressToLat() {
 				lat = geocodedResponse[0].lat;
 				lon = geocodedResponse[0].lon;
 				url = ('https://lfweather.herokuapp.com/forecast/' + lat + ',' + lon);
+				document.getElementById('map-embed-iframe').src = 'https://maps.darksky.net/@radar,' + lat + ',' + lon + ',10?domain=file%3A%2F%2F%2FC%3A%2FUsers%2Ffordf%2FDesktop%2Flfweather%2Findex.html&auth=1547925784_1597c1ace68e31ce860f03d19e60ca58&marker=' + lat + ',' + lon + '&embed=true&timeControl=false&fieldControl=false&defaultField=radar';
 				customLocation = true;
 				geocode = 'forward';
 				getData(true);
