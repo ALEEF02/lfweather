@@ -423,11 +423,16 @@
 			</div>
 			<h3>Radar</h3>
 			<div id="radarContainer" class="radarContainer">
-				<iframe title="Rain Radar" id="map-embed-iframe" frameborder="0" height="500px" width="100%" src="https://maps.darksky.net/@radar,33.6469,-117.6860,10?domain=file%3A%2F%2F%2FC%3A%2FUsers%2Ffordf%2FDesktop%2Flfweather%2Findex.html&amp;auth=1547925784_1597c1ace68e31ce860f03d19e60ca58&amp;marker=33.6469%2C-117.6860&amp;embed=true&amp;timeControl=false&amp;fieldControl=false&amp;defaultField=radar"></iframe>
+				<div class="linksGroup" id="radarLoad">
+					<button class="gpsButtons" onClick="loadRadar();" role="button" name="loadRadar">
+						<span>Load Radar </span>
+					</button>
+				</div>
+				<iframe title="Rain Radar" id="map-embed-iframe" frameborder="0" height="0px" width="100%" src=""></iframe>
 			</div>
 			<div class="credits">
 				<p>
-					Version 3.8.1:
+					Version 3.8.2:
 					<a href="https://github.com/ALEEF02/lfweather/releases" id="changelogLink" onclick="trackOutboundLink('https://github.com/ALEEF02/lfweather/releases'); return false;">
 						Changelog
 					</a>

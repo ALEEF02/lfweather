@@ -1429,6 +1429,12 @@ function init(){
 	}
 }
 
+function loadRadar() {
+	document.getElementById('radarLoad').style.display='none';
+	document.getElementById('map-embed-iframe').height = '500px';
+	document.getElementById('map-embed-iframe').src = 'https://maps.darksky.net/@radar,33.6469,-117.6860,10?auth=1547925784_1597c1ace68e31ce860f03d19e60ca58&marker=33.6469,-117.6860&embed=true&timeControl=false&fieldControl=false&defaultField=radar';
+}
+
 window.addEventListener('online', function(e) {
 	console.log('Back online');
 	document.getElementById('errorMessage').innerHTML='There was an error fetching the data';
