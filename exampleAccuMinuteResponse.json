@@ -1,0 +1,59 @@
+{
+  "Summary": {
+    "Phrase": "Periods of rain will continue for 84 min",
+    "Type": "RAIN",
+    "TypeId": 1
+  },
+  "Summaries": [
+    {
+      "StartMinute": 0,
+      "EndMinute": 83,
+      "CountMinute": 84,
+      "MinuteText": "Periods of rain will continue for %minute_value min",
+      "Type": "RAIN",
+      "TypeId": 1
+    },
+    {
+      "StartMinute": 1,
+      "EndMinute": 5,
+      "CountMinute": 5,
+      "MinuteText": "Rain starting in %minute_value min",
+      "Type": null,
+      "TypeId": 0
+    },
+    {
+      "StartMinute": 6,
+      "EndMinute": 41,
+      "CountMinute": 36,
+      "MinuteText": "A break in the rain in %minute_value min",
+      "Type": "RAIN",
+      "TypeId": 1
+    },
+    {
+      "StartMinute": 42,
+      "EndMinute": 69,
+      "CountMinute": 28,
+      "MinuteText": "Rain starting in %minute_value min",
+      "Type": null,
+      "TypeId": 0
+    },
+    {
+      "StartMinute": 70,
+      "EndMinute": 83,
+      "CountMinute": 14,
+      "MinuteText": "Rain ending in %minute_value min",
+      "Type": "RAIN",
+      "TypeId": 1
+    },
+    {
+      "StartMinute": 84,
+      "EndMinute": 119,
+      "CountMinute": 36,
+      "MinuteText": "No precipitation for at least %MINUTE_VALUE min",
+      "Type": null,
+      "TypeId": 0
+    }
+  ],
+  "Link": "http://www.accuweather.com/en/us/lake-forest-ca/92630/minute-weather-forecast/342487?lang=en-us&lat=33.66&lon=-117.69",
+  "MobileLink": "http://www.accuweather.com/en/us/lake-forest-ca/92630/minute-weather-forecast/342487?lang=en-us&lat=33.66&lon=-117.69"
+}

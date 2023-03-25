@@ -42,7 +42,7 @@ function getCookie(cname, def = "") {
 function setUnit(unit, isNew) {
 	unitsTemp = unit;
 	document.getElementById('dewPointSym').innerHTML = "\&#176;" + unitsTemp;
-	document.getElementById('feelsLikeSym').innerHTML = "\&#176;" + unitsTemp;
+	document.getElementById('feelsLikeSym').innerHTML  = "\&#176;" + unitsTemp;
 	try {
 		document.getElementById('temp').innerHTML=getNewTemp(data[0].tempf).toFixed(1);
 		document.getElementById('dewPoint').innerHTML=getNewTemp(data[0].dewPoint).toFixed(1);
@@ -110,6 +110,7 @@ function latToAddress(inLat, inLong) {
 	geocodeRequest.send();
 }
 
+// Get the lat & long for the search box query
 function addressToLat() {
 	if (document.getElementById('weatherLocationSearchBox').value != "") {
 		console.log('User searching for location, searching...');
@@ -123,11 +124,11 @@ function addressToLat() {
 				console.log('Geocode data recieved: ', geocodedResponse);
 				lat = geocodedResponse[0].lat;
 				lon = geocodedResponse[0].lon;
-				url = ('https://lfweather.herokuapp.com/forecast/' + lat + ',' + lon);
+				geoPosUrl = ('https://lfweather.herokuapp.com/forecast/' + lat + ',' + lon);
 				document.getElementById('map-embed-iframe').src = 'https://maps.darksky.net/@radar,' + lat + ',' + lon + ',10?domain=file%3A%2F%2F%2FC%3A%2FUsers%2Ffordf%2FDesktop%2Flfweather%2Findex.html&auth=1547925784_1597c1ace68e31ce860f03d19e60ca58&marker=' + lat + ',' + lon + '&embed=true&timeControl=false&fieldControl=false&defaultField=radar';
 				customLocation = true;
 				geocode = 'forward';
-				getData(true);
+				getGeoPos(true);
 			}
 		}
 		geocodeRequest.onerror = function (e) {
@@ -145,8 +146,7 @@ function addressToLat() {
 	}					
 }
 
-request.open('GET', 'https://ambientweather.herokuapp.com/current/13');
-
+// Get data from AmbientWeather
 request.onreadystatechange = function () {
 	if (this.readyState === 4) {
 		currentDate = new Date();
@@ -330,8 +330,8 @@ request.onerror = function () {
 	});
 	ga("gtag_UA_52495574_19.send", "event", {eventCategory: "error", eventAction: "data", eventLabel: "AmbientWeather request failed", eventValue: 0});
 };
+fetchData();
 
-request.send();
 
 function updateTime(){
 	currentDate = new Date();
@@ -349,6 +349,7 @@ function updateTime(){
 	}
 };
 
+// Get new data from the LF weather station
 function fetchData(){
 	console.log('Fetching new data...');
 	request.open('GET', 'https://ambientweather.herokuapp.com/current/13');
@@ -379,6 +380,7 @@ window.addEventListener("resize", function() {
 	}
 });
 
+// AmbientWeather WS rain chart
 function buildChart(alreadyBuilt) {
 	console.log("Queing Past Rain Chart...");
 	google.charts.load('current', {packages: ['corechart', 'line']});
@@ -493,18 +495,24 @@ function buildChart(alreadyBuilt) {
 	});
 }
 
+
 var lat = '33.646963';
 var lon = '-117.686047';
+var geopos = "342487";
 var customLocation = false;
-var url = ('https://lfweather.herokuapp.com/forecast/' + lat + ',' + lon);
-var darkSkyData = {};
-var darkRequest = new XMLHttpRequest();
-var darkCurrentDate = new Date();
+var geoPosUrl = ('https://lfweather.herokuapp.com/forecast/geopos/' + lat + ',' + lon);
+var coreUrl = ('https://lfweather.herokuapp.com/forecast/core/' + geopos);
+var minutelyUrl = ('https://lfweather.herokuapp.com/forecast/minute/' + lat + ',' + lon);
+var geoPosData = {};
+var accuCoreData = {};
+var minuteData = {};
+var coreRequest = new XMLHttpRequest();
 var queued = false;
 var simpleChart = true;
 
-function currentlyDark() {
-	console.log('Stopping AmbientWeather update loop and using Dark Sky data!');
+// Use the Accuweather data instead of the AmbientWeather data
+function currentlyAccu() {
+	console.log('Stopping AmbientWeather update loop and using Accuweather data!');
 	clearInterval(updateLoop);
 	currentDate = new Date();
 	document.getElementById('compass').style.transform='rotate(' + darkSkyData.currently.windBearing + 'deg)';
@@ -636,9 +644,9 @@ function checkPosition(position) {
 	//top right: 33.706016, -117.619621
 	lat = position.coords.latitude;
 	lon = position.coords.longitude;
-	url = ('https://lfweather.herokuapp.com/forecast/' + lat + ',' + lon);
+	geoPosUrl = ('https://lfweather.herokuapp.com/forecast/' + lat + ',' + lon);
 	console.log('Found user location, setting new latitude and longitude: ' + lat + ', ' + lon);
-	console.log('New URL: ' + url);
+	console.log('New URL: ' + geoPosUrl);
 	document.getElementById('map-embed-iframe').src = 'https://maps.darksky.net/@radar,' + lat + ',' + lon + ',10?domain=file%3A%2F%2F%2FC%3A%2FUsers%2Ffordf%2FDesktop%2Flfweather%2Findex.html&auth=1547925784_1597c1ace68e31ce860f03d19e60ca58&marker=' + lat + ',' + lon + '&embed=true&timeControl=false&fieldControl=false&defaultField=radar';
 	//console.log('New radar link: ' + document.getElementById('map-embed-iframe').src);
 	if (!(position.coords.latitude > '33.606301' && position.coords.latitude < '33.706016' && position.coords.longitude > '-117.718207' && position.coords.longitude < '-117.619621')) {
@@ -648,9 +656,10 @@ function checkPosition(position) {
 	} else {
 		console.log('User still within Lake Forest, only getting forecast data');
 	}
-	getData(false);
+	getGeoPos(false);
 }
 
+// Handles GPS errors
 function handleError(error) {
 	switch(error.code) {
 		case error.PERMISSION_DENIED:
@@ -696,6 +705,33 @@ function handleError(error) {
 	}
 }
 
+// Get the geoPos for the lat & long
+function getGeoPos(searchBox) {
+	
+	console.log('Hiding buttons...');
+	document.getElementById('forecastErrorMessage').style.display='none';
+	document.getElementById('forecastLinksGroup').style.display = "none";
+	document.getElementById('forecastSearchGroup').style.display = "none";
+	document.getElementById('rainCurrentText').style.display='block';
+	
+	var geoPosRequest = new XMLHttpRequest();
+	geoPosRequest.open('GET', geoPosUrl);
+	geoPosRequest.onreadystatechange = function () {
+		if (this.readyState === 4) {
+			if (this.status === 200) { // ALL THIS NEEDS TO BE WRITTEN
+				geoPosData = JSON.parse(this.responseText);
+				console.log('Accuweather GeoPos data recieved: ', geoPosData);
+				getData(searchBox);
+			}
+		} else if (this.readyState === 3) {
+			document.getElementById('rainCurrentText').innerHTML='Downloading GeoPos Data...';
+		}
+	};
+}
+
+/**
+  * Get data from Accuweather
+  */
 function getData(searchBox) {
 	if (searchBox) {
 		ga("gtag_UA_52495574_19.send", "event", {eventCategory: "data", eventAction: "dataOnClick", eventLabel: "DarkSky Data Requested using search box", eventValue: 0});
@@ -708,41 +744,40 @@ function getData(searchBox) {
 	document.getElementById('forecastLinksGroup').style.display = "none";
 	document.getElementById('forecastSearchGroup').style.display = "none";
 	document.getElementById('rainCurrentText').style.display='block';
-	document.getElementById('rainCurrentText').innerHTML='Fetching Data...';
+	document.getElementById('rainCurrentText').innerHTML='Fetching Core Data...';
 	var arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
 	console.log('Requesting data...');
-	darkRequest.open('GET', url);
+	coreRequest.open('GET', coreUrl);
 
-	darkRequest.onreadystatechange = function () {
+	coreRequest.onreadystatechange = function () {
 		if (this.readyState === 4) {
 			if (this.status === 200) {
-				darkCurrentDate = new Date();
-				darkSkyData = JSON.parse(this.responseText);
+				accuCoreData = JSON.parse(this.responseText);
 				document.getElementById('forecastErrorMessage').style.display='none';
-				console.log('Dark Sky data recieved: ', darkSkyData);
+				console.log('Accuweather data recieved: ', accuCoreData);
 				document.getElementById('rainCurrentText').style.display='none';
 				document.getElementById('futureForecastContainer').style.display='block';
 				queued = false;
-				if (darkSkyData.flags.units == 'us') {
+				if (accuCoreData.DailyForecasts[0].Temperature.UnitType == 18) {
 					console.log('us units, not changing anything');
-				} else if (darkSkyData.flags.units == 'si') {
+				} else if (accuCoreData.DailyForecasts[0].Day.Wind.Speed.UnitType == 10) {
 					console.log('si units, changing');
 					unitsTemp = 'C';
 					unitsRate = 'mm/hr';
 					unitsSpeed = 'mps';
 					unitsDistance = 'kilometers';
 					unitsAmount = 'cm';
-				} else if (darkSkyData.flags.units == 'uk2') {
-					console.log('uk2 units, changing');
-					unitsTemp = 'C';
-					unitsRate = 'mm/hr';
-					unitsAmount = 'cm';
-				} else if (darkSkyData.flags.units == 'ca') {
+				} else if (accuCoreData.DailyForecasts[0].Day.Wind.Speed.UnitType == 7) {
 					console.log('ca units, changing');
 					unitsTemp = 'C';
 					unitsRate = 'mm/hr';
 					unitsSpeed = 'kph';
 					unitsDistance = 'kilometers';
+					unitsAmount = 'cm';
+				} else if (accuCoreData.DailyForecasts[0].Temperature.UnitType == 17) {
+					console.log('uk2 units, changing');
+					unitsTemp = 'C';
+					unitsRate = 'mm/hr';
 					unitsAmount = 'cm';
 				}
 				if (darkSkyData.alerts) {
@@ -844,7 +879,7 @@ function getData(searchBox) {
 				hourlyBuildChart(false);
 				dailyBuildChart(false);
 				if (customLocation === true) {
-					currentlyDark();
+					currentlyAccu();
 				}
 			}
 		} else if (this.readyState === 3) {
@@ -1018,7 +1053,7 @@ function getData(searchBox) {
 		}
 	}
 	
-	darkRequest.onerror = function () {
+	coreRequest.onerror = function () {
 		console.log('!Error while requesting dark data, onError triggered');
 		document.getElementById('forecastErrorMessage').innerHTML='There was an error fetching the data';
 		document.getElementById('forecastErrorMessage').style.display='block';
@@ -1030,7 +1065,7 @@ function getData(searchBox) {
 		ga("gtag_UA_52495574_19.send", "event", {eventCategory: "error", eventAction: "data", eventLabel: "Dark Sky data request failed", eventValue: 0});
 	};
 
-	darkRequest.send();
+	coreRequest.send();
 }
 
 function simpleRainBuildChart(alreadyBuilt, cookie) {
